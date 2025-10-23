@@ -2,9 +2,10 @@
 GOAL: Participants in this lab will construct a 'digital twin' of a turbine generator, consisting of a PLC, HMI, and dummy Python load.
 
 ## Detailed Instructions
-0. Install prerequisites:
-    - Docker
-    - Git
+### Install prerequisites:
+- Docker
+- Git
+### Install OpenPLC
 1. First, load OpenPLC in Docker (instructions from https://github.com/thiagoralves/OpenPLC_v3)
 
         git clone https://github.com/thiagoralves/OpenPLC_v3.git
@@ -22,36 +23,71 @@ GOAL: Participants in this lab will construct a 'digital twin' of a turbine gene
 
     once done, should say that it's running on TCP 8443. open a web browser and go to http://127.0.0.1:8080. you should see the following:
 
-        picture of good webserver
+    <img src="static/good_webserver.png" alt="Fuxa Editor" width="800"/>
 
     log in with default creds 'openplc:openplc'
 
     (TODO) talk about master:slave
     (TODO) overview of this portal
 
-2. Install OpenPLC editor (TODO)
-3. Start OpenPLC Editor
-    a. Overview of this program (TODO)
-    b. Load Blink
-        i. File > Tutorials and Examples > 5. Blink
-        ii. (Double) click 'Blink' in Project pane on top left
-        iii. (TODO) overview of ladder logic
-        iv. Run simulation
-            1. In the second pane from top, click the running person icon, 'Start PLC Simulation'
-            2. In bottom left pane, click sunglasses next to 'blink_led (BOOL)'
-            3. In Debugger (right pane), watch the value of blink_led switch from True to False to True etc
-            4. In the second pane from top, where the running person icon was, click the stop sign to stop simulation
-        v. Program OpenPLC
-            1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime'
-            2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
-            3. In OpenPLC, click Programs in the left pane.
-            4. Under Upload Program, click Browse, and select 'blink.st'. Then click Upload Program.
-            5. In the next page, give your program a title. The other fields are optional.
-            6. Once done, click 'Start PLC' in the bottom left.
-            7. Navigate to 'Monitoring' and watch the LED blink on and off.
-            8. When done, you may click the button in bottom left to 'Stop PLC'.
+### Install OpenPLC Editor
+Install OpenPLC editor (TODO)
 
-3. Load an HMI in Docker
-    https://openplc.discussion.community/post/alternative-hmi-12512639
+### Start OpenPLC Editor
+1. Overview of this program (TODO)
+2. Load Blink
+    i. File > Tutorials and Examples > 5. Blink
+    ii. (Double) click 'Blink' in Project pane on top left
+    iii. (TODO) overview of ladder logic
+    iv. Run simulation
+        1. In the second pane from top, click the running person icon, 'Start PLC Simulation'
+        2. In bottom left pane, click sunglasses next to 'blink_led (BOOL)'
+        3. In Debugger (right pane), watch the value of blink_led switch from True to False to True etc
+        4. In the second pane from top, where the running person icon was, click the stop sign to stop simulation
+    v. Program OpenPLC
+        1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime'
+        2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
+        3. In OpenPLC, click Programs in the left pane.
+        4. Under Upload Program, click Browse, and select 'blink.st'. Then click Upload Program.
+        5. In the next page, give your program a title. The other fields are optional.
+        6. Once done, click 'Start PLC' in the bottom left.
+        7. Navigate to 'Monitoring' and watch the LED blink on and off.
+        8. When done, you may click the button in bottom left to 'Stop PLC'.
+
+### Install HMI
+
+#### Fuxa
+1. PROS - 
+    - english language docs
+    - more recently updated
+
+2. Install
+            
+        // from https://github.com/frangoteam/FUXA
+        // ---------------------------------------
+        // basic
+        docker pull frangoteam/fuxa:latest
+        docker run -d -p 1881:1881 frangoteam/fuxa:latest
+
+        // persistent storage of application data (project), daq (tags history), logs and images (resource)
+        docker run -d -p 1881:1881 -v fuxa_appdata:/usr/src/app/FUXA/server/_appdata -v fuxa_db:/usr/src/app/FU
+
+        // with Docker compose
+        // persistent storage will be at ./appdata ./db ./logs and ./images
+        wget https://raw.githubusercontent.com/frangoteam/FUXA/master/compose.yml
+        docker compose up -d
+            
+
+3. Navigate to http://127.0.0.1:1881 in browser. Screen should be mostly blank, with blue circle in bottom left and orange circle in bottom right. Click the blue circle, then click Editor. It should look like the following.
+
+    <img src="static/fuxa_editor.png" alt="Fuxa Editor" width="800"/>
+
+#### ScadaBR
+b. ScadaBR
+    i. PROS -
+        - integrates very well with OpenPLC
+https://openplc.discussion.community/post/alternative-hmi-12512639
+
+
 4. Dummy Python load
 5. Replay attack???
