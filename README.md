@@ -1,6 +1,7 @@
 ## Overview
 This repository provides instructions for creating a 'digital twin' ICS lab which behaves identically to production ICS/OT gear at the network level. This lab will mimic a turbine generator and consist of a PLC, HMI, and dummy Python load. It contains no modern security measures and is vulnerable to well-understood attacks such as replays and MitM, making it ideal for cybersecurity education and training.
 
+## Motivation and Roadmap
 This guide may be understood as instructions for building a series of [Black Triangles](https://rampantgames.com/blog/?p=7745). The term was coined by Jay Barnson while working at the video game company SingleTrac, which made such classics as Twisted Metal (emphasis added, as well as some commas):
 > It was sometime in my first week, possibly my first or second day. In the main engineering room, there was a whoop and cry of success.
 >
