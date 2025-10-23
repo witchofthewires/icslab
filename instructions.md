@@ -1,10 +1,23 @@
 ## Overview
 GOAL: Participants in this lab will construct a 'digital twin' of a turbine generator, consisting of a PLC, HMI, and dummy Python load.
 
+We're here to build a series of [Black Triangles](https://rampantgames.com/blog/?p=7745). The term was coined by Jay Barnson while working at the video game company SingleTrac, which made such classics as Twisted Metal (emphasis added, as well as some commas):
+> It was sometime in my first week, possibly my first or second day. In the main engineering room, there was a whoop and cry of success.
+>
+> Our company financial controller and acting HR lady, Jen, came in to see what incredible things the engineers and artists had come up with. Everyone was staring at a television set hooked up to a development box for the Sony Playstation. There, on the screen, against a single-color background, was a black triangle.
+>
+> “It’s a black triangle,” she said in an amused but sarcastic voice. One of the engine programmers tried to explain, but she shook her head and went back to her office. I could almost hear her thoughts… “We’ve got ten months to deliver two games to Sony, and they are cheering over a black triangle? THAT took them nearly a month to develop?”
+>
+> What she later came to realize (and explain to others) was that the black triangle was a pioneer. It wasn’t just that we’d managed to get a triangle onto the screen. That could be done in about a day. It was the journey the triangle had taken to get up on the screen. It had passed through our new modeling tools, through two different intermediate converter programs, had been loaded up as a complete database, and been rendered through a fairly complex scene hierarchy, fully textured and lit (though there were no lights, so the triangle came out looking black). <em><strong>The black triangle demonstrated that the foundation was finally complete, the core of a fairly complex system was completed, and we were now ready to put it to work doing cool stuff</em></strong>. By the end of the day, we had complete models on the screen, manipulating them with the controllers. Within a week, we had an environment to move the model through.
+>
+> Afterwards, we came to refer to certain types of accomplishments as “black triangles.” These are important accomplishments that take a lot of effort to achieve, but upon completion you don’t have much to show for it only that more work can now proceed. It takes someone who really knows the guts of what you are doing to appreciate a black triangle.
+
 ## Detailed Instructions
 ### Install prerequisites:
 - Docker
 - Git
+- Wireshark
+- Radzio
 ### Install OpenPLC
 1. First, load OpenPLC in Docker (instructions from https://github.com/thiagoralves/OpenPLC_v3)
 
@@ -53,6 +66,16 @@ Install OpenPLC editor (TODO)
         6. Once done, click 'Start PLC' in the bottom left.
         7. Navigate to 'Monitoring' and watch the LED blink on and off.
         8. When done, you may click the button in bottom left to 'Stop PLC'.
+    vi. View traffic
+        1. If you turned off the PLC in the last step, turn it on again.
+        2. Load up Wireshark, capture on 'Adapter for loopback traffic capture' with filter 'port 502'
+        3. Open Radzio, go to Connection settings, ensure Modbus TCP is selected, ensure the IP address is '127.0.0.1' and port is 502, then click OK. See screenshot below.
+
+    <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
+
+4. In Wireshark, click the blue fin in top left, 3rd pane, to start packet capture. From the top pane in Radzio, select Connection > Connect. You should see traffic in Wireshark that resembles the following (capture was stopped following 4 query-response cycles).
+
+    <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
 
 ### Install HMI
 
