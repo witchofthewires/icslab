@@ -109,12 +109,35 @@ Install OpenPLC editor (TODO)
 
     <img src="static/fuxa_editor.png" alt="Fuxa Editor" width="800"/>
 
+4. Click the gear in the top left, and click Plugins. Drat, Modbus-TCP is not installed. We can add that by:
+    a. Go to terminal, and type "docker ps" to view running images.
+    b. Find the fuxa container in the output. Note its UID at the start of the line, or rather, the first 4 characters of this UID (eg: d931).
+    c. "docker exec -it $ID bash"
+    d. Execute 'whoami; hostname'. You should get output like "root\n$FULL_UID".
+    e. "npm install modbus-tcp". Should get 'added 1 packages in 2s' or similar.
+    f. 'exit'. Then, 'docker restart $ID'.
+    g. In Fuxa, click the gear, click Connections. Click the Plus in the bottom right. Select type 'ModbusTCP', and fill out the connection as follows (note that Docker IP, not localhost, must be used; TODO how get this info)
+    ![Connections Property Screen](static/openplc_fuxa_connection.png)
+    h. Click the 'link' icon on the connection to open the Connections Settings screen. Click the Plus in the bottom right. Fill out the connection form to match the Tag Property popup in the screenshot below (note that the address offset is 4, not 3; Fuxa counts the first coil as 1, not 0). Click OK. After a few seconds, the Connection settings page should resemble the screenshot below.
+
+    <img src="static/openplc_fuxa_coil_connection.png" alt="Fuxa Editor" width="800"/>
+    i. Go to other screen and make blinking red light (TODO)
+    j. You can use tcpdump to get an internal packet capture and show it in Wireshark (TODO)
+
 #### ScadaBR
 b. ScadaBR
     i. PROS -
         - integrates very well with OpenPLC
 https://openplc.discussion.community/post/alternative-hmi-12512639
 
+### Writing Ladder Logic
+We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. 
 
-4. Dummy Python load
-5. Replay attack???
+### Replay Attack
+The lab is complete! Let's use it to test out a classic ICS/OT pentesting technique, the replay attack!
+
+### Conclusion
+
+## Acknowledgments
+- Huge thanks to Dr. Thiago Alves for all his work on the OpenPLC project.
+- Thanks to seafoxc for their Youtube tutorial on [connecting Fuxa to OpenPLC](https://www.youtube.com/watch?v=OQA5eVge0l8).
