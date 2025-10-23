@@ -26,8 +26,32 @@ GOAL: Participants in this lab will construct a 'digital twin' of a turbine gene
 
     log in with default creds 'openplc:openplc'
 
-2. Load an HMI in Docker
+    (TODO) talk about master:slave
+    (TODO) overview of this portal
+
+2. Install OpenPLC editor (TODO)
+3. Start OpenPLC Editor
+    a. Overview of this program (TODO)
+    b. Load Blink
+        i. File > Tutorials and Examples > 5. Blink
+        ii. (Double) click 'Blink' in Project pane on top left
+        iii. (TODO) overview of ladder logic
+        iv. Run simulation
+            1. In the second pane from top, click the running person icon, 'Start PLC Simulation'
+            2. In bottom left pane, click sunglasses next to 'blink_led (BOOL)'
+            3. In Debugger (right pane), watch the value of blink_led switch from True to False to True etc
+            4. In the second pane from top, where the running person icon was, click the stop sign to stop simulation
+        v. Program OpenPLC
+            1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime'
+            2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
+            3. In OpenPLC, click Programs in the left pane.
+            4. Under Upload Program, click Browse, and select 'blink.st'. Then click Upload Program.
+            5. In the next page, give your program a title. The other fields are optional.
+            6. Once done, click 'Start PLC' in the bottom left.
+            7. Navigate to 'Monitoring' and watch the LED blink on and off.
+            8. When done, you may click the button in bottom left to 'Stop PLC'.
+
+3. Load an HMI in Docker
     https://openplc.discussion.community/post/alternative-hmi-12512639
-3. Dummy Python load
-4. Program the whole thing
+4. Dummy Python load
 5. Replay attack???
