@@ -184,6 +184,7 @@ Instructions:
     ![Connections Property Screen](static/openplc_fuxa_connection.png)
 
     h. Click the 'link' icon on the connection to open the Connections Settings screen. Click the Plus in the bottom right. Fill out the connection form to match the Tag Property popup in the screenshot below (note that the address offset is 4, not 3; Fuxa counts the first coil as 1, not 0). Click OK. After a few seconds, the Connection settings page should resemble the screenshot below.
+    
       <img src="static/openplc_fuxa_coil_connection.png" alt="Fuxa Editor" width="800"/>
 
     i. Create a view to more easily interact with the PLC
