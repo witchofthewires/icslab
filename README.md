@@ -23,7 +23,10 @@ Next, an HMI must be built in Docker. This lab will use the FOSS HMI Fuxa. Once 
 - Git
 - Wireshark
 - Radzio
-### Install OpenPLC
+### Before we begin
+Modbus is often referred to as a 'master-slave' protocol. This terminology is both uncomfortable and unnecessary, as Modbus can just as easily be described as a traditional client-server protocol, with 'masters' as clients and 'slaves' as servers. We will use this terminology throughout this lab.
+
+### OpenPLC
 1. First, load OpenPLC in Docker (instructions from https://github.com/thiagoralves/OpenPLC_v3)
 
         git clone https://github.com/thiagoralves/OpenPLC_v3.git
@@ -48,41 +51,52 @@ Next, an HMI must be built in Docker. This lab will use the FOSS HMI Fuxa. Once 
     (TODO) talk about master:slave
     (TODO) overview of this portal
 
-### Install OpenPLC Editor
-Install OpenPLC editor (TODO)
+### OpenPLC Editor
+1. Download and install OpenPLC Editor by following the instructions on [this page](https://autonomylogic.com/download/).
+2. Start OpenPLC Editor. You should see a screen similar to the following.
+![OpenPLC Editor on startup](static/openplc_editor_new.png)
+3. Load the sample project 'Blink'.
 
-### Start OpenPLC Editor
-1. Overview of this program (TODO)
-2. Load Blink
-    i. File > Tutorials and Examples > 5. Blink
-    ii. (Double) click 'Blink' in Project pane on top left
-    iii. (TODO) overview of ladder logic
-    iv. Run simulation
-        1. In the second pane from top, click the running person icon, 'Start PLC Simulation'
-        2. In bottom left pane, click sunglasses next to 'blink_led (BOOL)'
-        3. In Debugger (right pane), watch the value of blink_led switch from True to False to True etc
-        4. In the second pane from top, where the running person icon was, click the stop sign to stop simulation
-    v. Program OpenPLC
-        1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime'
-        2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
-        3. In OpenPLC, click Programs in the left pane.
-        4. Under Upload Program, click Browse, and select 'blink.st'. Then click Upload Program.
-        5. In the next page, give your program a title. The other fields are optional.
-        6. Once done, click 'Start PLC' in the bottom left.
-        7. Navigate to 'Monitoring' and watch the LED blink on and off.
-        8. When done, you may click the button in bottom left to 'Stop PLC'.
-    vi. View traffic
-        1. If you turned off the PLC in the last step, turn it on again.
-        2. Load up Wireshark, capture on 'Adapter for loopback traffic capture' with filter 'port 502'
-        3. Open Radzio, go to Connection settings, ensure Modbus TCP is selected, ensure the IP address is '127.0.0.1' and port is 502, then click OK. See screenshot below.
+    a. Click 'File' in top left, then 'Tutorials and Examples', then '5. Blink'. Blinking an LED is the 'Hello, World' of cyber-physical systems/embedded programming.
 
-    <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
+    b. Double click 'Blink' in Project pane on top left. Your screen should now look similar to the following.
+    ![OpenPLC Editor with example 'Blink' loaded](static/openplc_editor_blink.png)
+    
+    c. This program is written in Ladder Logic and uses two [timer blocks](https://www.fernhillsoftware.com/help/iec-61131/common-elements/standard-function-blocks/on-delay-timer.html) to turn the variable 'blink_led' from True to False and back again.  
+      1. The '[/]' next to 'blink_led' which feeds into the TON0 IN is an IEC61131-3 Ladder Logic symbol meaning 'Normally Closed Contact'. The '( )' next to 'blink_led' which is fed by TOF0 Q is a symbol meaning 'Open Coil'. Contacts are inputs, and a Normally Closed Contact will output True when its associated variable has value False, and vice versa. Coils are outputs which set the value of their associated variables.
+      2. For a TON (Turn On) block, the input EN (Enable) must be set True (also called High or 1) for the timer to function. The output ENO (Enable Output) tracks the value of EN.
+      3. A rising edge on the input IN (Input) starts the timer.
+      4. When IN is triggered (see step 3c2 above), the output ET (Elapsed Time) increases until it equals input PT (Programmed/Preset Time). At that point, output Q (standard name for circuit block output) is set True, and remains in this state until EN goes to False.
+      5. When a TON block has input EN set to False, output Q is False, and output ET is 0.
+      6. TOF (Turn Off) blocks behave the same, except that when input EN is True, Q is True and ET is 0. When EN goes False, the timer behaves as described in steps 3c2-3c3 above, except that when ET=PT, Q goes False.
+      7. In this example, both TON0 and TOF0 have their PT inputs set by constant variables (900ms for TON0 and 100ms for TOF0).
+    
+    d. Run simulation
+      1. In the second pane from top, click the running person icon, 'Start PLC Simulation' (marked 1 in the 3b diagram).
+      2. In bottom left pane, click sunglasses next to 'blink_led (BOOL)' (marked 3 in the 3b diagram).
+      3. In Debugger (right pane, marked 4 in 3b diagram), watch the value of blink_led switch from True for 100ms, to False for 900ms, to True for 100ms, etc. Double click on 'blink_led' in the Debugger pane to view a graph of its value over time.
+      4. In the second pane from top, where the running person icon was, click the stop sign to stop simulation.
+      5. Edit the PT inputs, and run the simulation again. How does changing the duration of the timers affect the value of 'blink_led'/shape of the output waveform?
+    
+    e. Program OpenPLC
+      1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime' (marked 2 in the 3b diagram).
+      2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
+      3. In OpenPLC, click Programs in the left pane.
+      4. Under Upload Program, click Browse, and select 'blink.st'. Then click Upload Program.
+      5. In the next page, give your program a title. The other fields are optional.
+      6. Once done, click 'Start PLC' in the bottom left.
+      7. Navigate to 'Monitoring' and watch the LED blink on and off.
+      8. When done, you may click the button in bottom left to 'Stop PLC'.
+    
+    f. View traffic
+      1. If you turned off the PLC in the last step, turn it on again.
+      2. Load up Wireshark, capture on 'Adapter for loopback traffic capture' with filter 'port 502'
+      3. Open Radzio, go to Connection settings, ensure Modbus TCP is selected, ensure the IP address is '127.0.0.1' and port is 502, then click OK. See screenshot below.
+      <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
+      4. In Wireshark, click the blue fin in top left, 3rd pane, to start packet capture. From the top pane in Radzio, select Connection > Connect. You should see traffic in Wireshark that resembles the following (capture was stopped following 4 query-response cycles).
+      <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
 
-4. In Wireshark, click the blue fin in top left, 3rd pane, to start packet capture. From the top pane in Radzio, select Connection > Connect. You should see traffic in Wireshark that resembles the following (capture was stopped following 4 query-response cycles).
-
-    <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
-
-### Install HMI
+### HMI
 
 #### Fuxa
 1. PROS - 
