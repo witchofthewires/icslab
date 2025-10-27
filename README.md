@@ -92,9 +92,9 @@ Modbus is often referred to as a 'master-slave' protocol. This terminology is bo
       1. If you turned off the PLC in the last step, turn it on again.
       2. Load up Wireshark, capture on 'Adapter for loopback traffic capture' with filter 'port 502'
       3. Open Radzio, go to Connection settings, ensure Modbus TCP is selected, ensure the IP address is '127.0.0.1' and port is 502, then click OK. See screenshot below.
-      <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
+        <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
       4. In Wireshark, click the blue fin in top left, 3rd pane, to start packet capture. From the top pane in Radzio, select Connection > Connect. You should see traffic in Wireshark that resembles the following (capture was stopped following 4 query-response cycles).
-      <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
+        <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
 
 ### HMI
 
