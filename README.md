@@ -97,7 +97,7 @@ In this section, we will install the OpenPLC Editor, and use it to program the v
       3. Open Radzio, go to Connection settings, ensure Modbus TCP is selected, ensure the IP address is '127.0.0.1' and port is 502, then click OK. See screenshot below.
         <img src="static/radzio.png" alt="Fuxa Editor" width="800"/>
       4. In Wireshark, click the blue fin in top left, 3rd pane, to start packet capture. From the top pane in Radzio, select Connection > Connect. You should see traffic in Wireshark that resembles the following (capture was stopped following 4 query-response cycles).
-        <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
+        <img src="static/wireshark1.png" alt="PLC-Radzio traffic in Wireshark" width="800"/>
 
 ### HMI
 At this point, you should have a virtual PLC programmed to blink its %QX0.3 coil on and off. You should be able to monitor the value of this variable with a Modbus client such as Radzio, and observe the associated Modbus traffic between your workstation and the OpenPLC container using Wireshark. Now, we will create a virtual HMI (Human Machine Interface) to more easily interact with our PLC. 
@@ -180,16 +180,51 @@ Instructions:
        172.17.0.2
        
     g. In Fuxa, click the gear, click Connections. Click the Plus in the bottom right. Select type 'ModbusTCP', and fill out the connection as follows (note that $PLC_IP, not localhost, must be used)
-    
+
     ![Connections Property Screen](static/openplc_fuxa_connection.png)
 
     h. Click the 'link' icon on the connection to open the Connections Settings screen. Click the Plus in the bottom right. Fill out the connection form to match the Tag Property popup in the screenshot below (note that the address offset is 4, not 3; Fuxa counts the first coil as 1, not 0). Click OK. After a few seconds, the Connection settings page should resemble the screenshot below.
 
     <img src="static/openplc_fuxa_coil_connection.png" alt="Fuxa Editor" width="800"/>
 
-    i. Go to other screen and make blinking red light (TODO)
-    
-    j. You can use tcpdump to get an internal packet capture and show it in Wireshark (TODO)
+    i. Create a view to more easily interact with the PLC
+      1. Navigate to the View Editor, either by clicking the top left gear and selecting 'Views', or by clicking the bottom left blue circle, and selecting 'Editor'. You should now be back to the initial screen as shown in step 3 above.
+      2. From the left pane, under General, click on the circle to select the Circle Tool, and create two circles of the same size (try creating one, copying and pasting it).
+      3. While a circle is selected, press any of the colors in the bottom pane to apply that color to the shape.
+      4. Without deselecting the circle, right click, and press 'Interactivity'. Select 'Actions' from the top pane in the popup window. Fill out the screen as shown below.This configures your shape to be visible when the value 'blink' is set True, and invisible otherwise. When done, press OK. 
+      ![Fuxa Editor Shape Settings](static/fuxa_editor_shape_settings.png)
+      5. Drag one circle on top of the other circle (order doesn't matter), then click the right-pointing triangle in the top pane to Play the View. You should see a static circle which blinks red in rhythm with the 'blink' waveform as configured in OpenPLC Editor. When you are done verifying that your view is working properly, close the popup window. 
+      6. Click the floppy disk on the far left of the top pane, then click 'Save Project'. 
+
+    j. Get packet capture and view in Wireshark
+
+      1. Return to the terminal you were using in Step 4.
+
+      2. Execute the following.
+          > docker exec -it $SHORT_ID tcpdump -Ann port 502 -w basic_hmi.pcap
+      
+          Your output should resemble the following. Note that this command is currently active and will run until you send a keyboard interrupt with CTRL-C.
+
+             tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+      3. Wait 5-10 seconds, then type CTRL-C to terminate the command.
+      4. Execute the following.
+         > docker exec -it $SHORT_ID pwd
+        
+         Your output should resemble the following. This value is called $WORKDIR in these instructions.
+
+             /workdir
+
+             What's next:
+             ...
+      5. Execute the following.
+         > docker cp $SHORT_ID:$WORKDIR/basic_hmi.pcap .
+        
+         Your output should resemble the following.
+
+             Successfully copied 499kB to C:\Users\ghost\Documents\dev\icslab\.
+
+      6. Open the file 'basic_hmi.pcap' in Wireshark. The output should resemble the screenshot below.
+        <img src="static/wireshark2.png" alt="PLC-HMI traffic in Wireshark" width="800"/>
 
 ### Writing Ladder Logic
 We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. 
