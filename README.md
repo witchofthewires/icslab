@@ -27,20 +27,22 @@ Next, an HMI must be built in Docker. This lab will use the FOSS HMI Fuxa. Once 
 Modbus is often referred to as a 'master-slave' protocol. This terminology is both uncomfortable and unnecessary, as Modbus can just as easily be described as a traditional client-server protocol, with 'masters' as clients and 'slaves' as servers. We will use this terminology throughout this lab.
 
 ### OpenPLC
+In this section, we will install the OpenPLC Docker container, which we will program in the next section.
+
 1. First, load OpenPLC in Docker (instructions from https://github.com/thiagoralves/OpenPLC_v3)
 
-        git clone https://github.com/thiagoralves/OpenPLC_v3.git
-        cd OpenPLC_v3
-        docker build -t openplc:v3 .
-        docker run -it --rm --privileged -p 8080:8080 openplc:v3
+       git clone https://github.com/thiagoralves/OpenPLC_v3.git
+       cd OpenPLC_v3
+       docker build -t openplc:v3 .
+       docker run -it --rm --privileged -p 8080:8080 openplc:v3
 
     If you receive the following error:
 
-        docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./start_openplc.sh": stat ./start_openplc.sh: no such file or directory: unknown.
+       docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./start_openplc.sh": stat ./start_openplc.sh: no such file or directory: unknown.
 
     then back out, delete the folder, and run the steps again with this git clone command:
 
-        git -c core.eol=lf -c core.autocrlf=false clone https://github.com/thiagoralves/OpenPLC_v3.git
+       git -c core.eol=lf -c core.autocrlf=false clone https://github.com/thiagoralves/OpenPLC_v3.git
 
     once done, should say that it's running on TCP 8443. open a web browser and go to http://127.0.0.1:8080. you should see the following:
 
@@ -48,10 +50,11 @@ Modbus is often referred to as a 'master-slave' protocol. This terminology is bo
 
     log in with default creds 'openplc:openplc'
 
-    (TODO) talk about master:slave
     (TODO) overview of this portal
 
 ### OpenPLC Editor
+In this section, we will install the OpenPLC Editor, and use it to program the virtual PLC we created in the last section. 
+
 1. Download and install OpenPLC Editor by following the instructions on [this page](https://autonomylogic.com/download/).
 2. Start OpenPLC Editor. You should see a screen similar to the following.
 ![OpenPLC Editor on startup](static/openplc_editor_new.png)
@@ -97,53 +100,94 @@ Modbus is often referred to as a 'master-slave' protocol. This terminology is bo
         <img src="static/wireshark1.png" alt="Fuxa Editor" width="800"/>
 
 ### HMI
+At this point, you should have a virtual PLC programmed to blink its %QX0.3 coil on and off. You should be able to monitor the value of this variable with a Modbus client such as Radzio, and observe the associated Modbus traffic between your workstation and the OpenPLC container using Wireshark. Now, we will create a virtual HMI (Human Machine Interface) to more easily interact with our PLC. 
+
+OpenPLC can connect to any HMI that can communicate with it over the Modbus protocol. Two of the most popular options for virtual HMIs are ScadaBR and Fuxa. Pros and cons of each are discussed below; for this guide, we will use Fuxa, mostly because the ScadaBR docs are in Portuguese.
+
+#### ScadaBR
+##### PROS:
+  - free and open source
+  - integrates very well with OpenPLC
+  - [official video tutorial](https://www.youtube.com/watch?v=KrcL6lhAHKw)
+##### CONS:
+  - no commits to project in two years ([most recent commit 2023-02-03](https://github.com/ScadaBR/ScadaBR))
+  - documentation is written in Portuguese
 
 #### Fuxa
-1. PROS - 
-    - english language docs
-    - more recently updated
+PROS:
+  - free and open source
+  - modern interface
+  - extensive [docs](https://github.com/frangoteam/FUXA/wiki)
 
-2. Install
+CONS:
+  - fewer community resources
+
+Instructions:
+1. Download and install Fuxa container
             
-        // from https://github.com/frangoteam/FUXA
-        // ---------------------------------------
-        // basic
-        docker pull frangoteam/fuxa:latest
-        docker run -d -p 1881:1881 frangoteam/fuxa:latest
+       // from https://github.com/frangoteam/FUXA
+       // ---------------------------------------
+       // basic
+       docker pull frangoteam/fuxa:latest
+       docker run -d -p 1881:1881 frangoteam/fuxa:latest
 
-        // persistent storage of application data (project), daq (tags history), logs and images (resource)
-        docker run -d -p 1881:1881 -v fuxa_appdata:/usr/src/app/FUXA/server/_appdata -v fuxa_db:/usr/src/app/FU
+       // persistent storage of application data (project), daq (tags history), logs and images (resource)
+       docker run -d -p 1881:1881 -v fuxa_appdata:/usr/src/app/FUXA/server/_appdata -v fuxa_db:/usr/src/app/FU
 
-        // with Docker compose
-        // persistent storage will be at ./appdata ./db ./logs and ./images
-        wget https://raw.githubusercontent.com/frangoteam/FUXA/master/compose.yml
-        docker compose up -d
-            
+       // with Docker compose
+       // persistent storage will be at ./appdata ./db ./logs and ./images
+       wget https://raw.githubusercontent.com/frangoteam/FUXA/master/compose.yml
+       docker compose up -d     
 
 3. Navigate to http://127.0.0.1:1881 in browser. Screen should be mostly blank, with blue circle in bottom left and orange circle in bottom right. Click the blue circle, then click Editor. It should look like the following.
 
     <img src="static/fuxa_editor.png" alt="Fuxa Editor" width="800"/>
 
 4. Click the gear in the top left, and click Plugins. Drat, Modbus-TCP is not installed. We can add that by:
+
     a. Go to terminal, and type "docker ps" to view running images.
-    b. Find the fuxa container in the output. Note its UID at the start of the line, or rather, the first 4 characters of this UID (eg: d931).
-    c. "docker exec -it $ID bash"
-    d. Execute 'whoami; hostname'. You should get output like "root\n$FULL_UID".
-    e. "npm install modbus-tcp". Should get 'added 1 packages in 2s' or similar.
-    f. 'exit'. Then, 'docker restart $ID'.
-    g. In Fuxa, click the gear, click Connections. Click the Plus in the bottom right. Select type 'ModbusTCP', and fill out the connection as follows (note that Docker IP, not localhost, must be used; TODO how get this info)
+
+    b. Find the fuxa container in the output. Note its UID (called $FULL_ID in these instructions) at the start of the line, or rather, the first 4 characters of this UID (eg: d931; called $SHORT_ID in these instructions). 
+
+    c. Execute the following to enter a bash shell inside the container: 
+    > docker exec -it $SHORT_ID bash
+
+    d. Execute the following:
+    > whoami; hostname
+
+    Your output should resemble the following.
+
+       root
+       $FULL_UID
+
+    e. Execute the following: 
+    > npm install modbus-tcp
+       
+    Your output should resemble the following.
+
+       added 1 packages in 2s
+    f. Execute the following. Note that the first command exits the container bash shell, so that the second command is executed in the context of the host machine.
+    > exit
+
+    > docker restart $SHORT_ID
+
+    g. Execute the following.
+    > docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SHORT_ID
+
+    Your output should resemble the following. This IP address is called $PLC_IP in these instructions.
+
+       172.17.0.2
+       
+    g. In Fuxa, click the gear, click Connections. Click the Plus in the bottom right. Select type 'ModbusTCP', and fill out the connection as follows (note that $PLC_IP, not localhost, must be used)
     ![Connections Property Screen](static/openplc_fuxa_connection.png)
+
     h. Click the 'link' icon on the connection to open the Connections Settings screen. Click the Plus in the bottom right. Fill out the connection form to match the Tag Property popup in the screenshot below (note that the address offset is 4, not 3; Fuxa counts the first coil as 1, not 0). Click OK. After a few seconds, the Connection settings page should resemble the screenshot below.
 
     <img src="static/openplc_fuxa_coil_connection.png" alt="Fuxa Editor" width="800"/>
-    i. Go to other screen and make blinking red light (TODO)
-    j. You can use tcpdump to get an internal packet capture and show it in Wireshark (TODO)
 
-#### ScadaBR
-b. ScadaBR
-    i. PROS -
-        - integrates very well with OpenPLC
-https://openplc.discussion.community/post/alternative-hmi-12512639
+    i. Go to other screen and make blinking red light (TODO)
+    
+    j. You can use tcpdump to get an internal packet capture and show it in Wireshark (TODO)
 
 ### Writing Ladder Logic
 We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. 
