@@ -184,7 +184,6 @@ Instructions:
     ![Connections Property Screen](static/openplc_fuxa_connection.png)
 
     h. Click the 'link' icon on the connection to open the Connections Settings screen. Click the Plus in the bottom right. Fill out the connection form to match the Tag Property popup in the screenshot below (note that the address offset is 4, not 3; Fuxa counts the first coil as 1, not 0). Click OK. After a few seconds, the Connection settings page should resemble the screenshot below.
-    
       <img src="static/openplc_fuxa_coil_connection.png" alt="Fuxa Editor" width="800"/>
 
     i. Create a view to more easily interact with the PLC
@@ -192,7 +191,9 @@ Instructions:
       2. From the left pane, under General, click on the circle to select the Circle Tool, and create two circles of the same size (try creating one, copying and pasting it).
       3. While a circle is selected, press any of the colors in the bottom pane to apply that color to the shape.
       4. Without deselecting the circle, right click, and press 'Interactivity'. Select 'Actions' from the top pane in the popup window. Fill out the screen as shown below.This configures your shape to be visible when the value 'blink' is set True, and invisible otherwise. When done, press OK. 
+
       ![Fuxa Editor Shape Settings](static/fuxa_editor_shape_settings.png)
+      
       5. Drag one circle on top of the other circle (order doesn't matter), then click the right-pointing triangle in the top pane to Play the View. You should see a static circle which blinks red in rhythm with the 'blink' waveform as configured in OpenPLC Editor. When you are done verifying that your view is working properly, close the popup window. 
       6. Click the floppy disk on the far left of the top pane, then click 'Save Project'. 
 
