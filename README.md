@@ -105,11 +105,12 @@ At this point, you should have a virtual PLC programmed to blink its %QX0.3 coil
 OpenPLC can connect to any HMI that can communicate with it over the Modbus protocol. Two of the most popular options for virtual HMIs are ScadaBR and Fuxa. Pros and cons of each are discussed below; for this guide, we will use Fuxa, mostly because the ScadaBR docs are in Portuguese.
 
 #### ScadaBR
-##### PROS:
+PROS:
   - free and open source
   - integrates very well with OpenPLC
   - [official video tutorial](https://www.youtube.com/watch?v=KrcL6lhAHKw)
-##### CONS:
+  
+CONS:
   - no commits to project in two years ([most recent commit 2023-02-03](https://github.com/ScadaBR/ScadaBR))
   - documentation is written in Portuguese
 
