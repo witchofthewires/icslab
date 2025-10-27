@@ -190,7 +190,7 @@ Instructions:
       1. Navigate to the View Editor, either by clicking the top left gear and selecting 'Views', or by clicking the bottom left blue circle, and selecting 'Editor'. You should now be back to the initial screen as shown in step 3 above.
       2. From the left pane, under General, click on the circle to select the Circle Tool, and create two circles of the same size (try creating one, copying and pasting it).
       3. While a circle is selected, press any of the colors in the bottom pane to apply that color to the shape.
-      4. Without deselecting the circle, right click, and press 'Interactivity'. Select 'Actions' from the top pane in the popup window. Fill out the screen as shown below.This configures your shape to be visible when the value 'blink' is set True, and invisible otherwise. When done, press OK. (TODO fix image alignment)
+      4. Without deselecting the circle, right click, and press 'Interactivity'. Select 'Actions' from the top pane in the popup window. Fill out the screen as shown below.This configures your shape to be visible when the value 'blink' is set True, and invisible otherwise. When done, press OK. 
         <img src="static/fuxa_editor_shape_settings.png" alt="Fuxa Editor Shape Settings"/>
 
       5. Drag one circle on top of the other circle (order doesn't matter), then click the right-pointing triangle in the top pane to Play the View. You should see a static circle which blinks red in rhythm with the 'blink' waveform as configured in OpenPLC Editor. When you are done verifying that your view is working properly, close the popup window. 
