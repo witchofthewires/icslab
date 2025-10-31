@@ -86,7 +86,7 @@ In this section, we will install the OpenPLC Editor, and use it to program the v
       5. Edit the PT inputs, and run the simulation again. How does changing the duration of the timers affect the value of 'blink_led'/shape of the output waveform?
     
     e. Program OpenPLC
-      0. If there is not a variable next to blink_led, add %QX0.3
+      0. If the 'Location' field for 'blink_led' is blank, set that to '%QX0.3'
       1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime' (marked 2 in the 3b diagram).
       2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
       3. In OpenPLC, click Programs in the left pane.
@@ -129,18 +129,19 @@ CONS:
   - fewer community resources
 
 Instructions:
-1. Download and install Fuxa container
+1. Download and install Fuxa container. Three methods are given below; if you are not sure which to use, use Method 1.
             
        // from https://github.com/frangoteam/FUXA
        // ---------------------------------------
-       // basic
+       // method 1 - basic
        docker pull frangoteam/fuxa:latest
        docker run -d -p 1881:1881 frangoteam/fuxa:latest
 
-       // persistent storage of application data (project), daq (tags history), logs and images (resource)
+       // method 2 - persistent storage of application data (project), daq (tags history), logs and images (resource)
+       docker pull frangoteam/fuxa:latest
        docker run -d -p 1881:1881 -v fuxa_appdata:/usr/src/app/FUXA/server/_appdata -v fuxa_db:/usr/src/app/FU
 
-       // with Docker compose
+       // method -3 with Docker compose
        // persistent storage will be at ./appdata ./db ./logs and ./images
        wget https://raw.githubusercontent.com/frangoteam/FUXA/master/compose.yml
        docker compose up -d     
