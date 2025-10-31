@@ -229,7 +229,9 @@ Instructions:
         <img src="static/wireshark2.png" alt="PLC-HMI traffic in Wireshark" width="800"/>
 
 ### Writing Ladder Logic
-We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. We'll also use this opportunity to introduce registers, which are 16-bit variables we can use to store numeric values in our program.
+We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC which will store and respond to data input by the HMI. We'll also use this opportunity to introduce registers, which can store multibit variables for our programs. Finally, we'll use a gauge to give our HMI a more dynamic and intuitive display.
+
+See the files plc.st and hmi.json.
 
 ### Conclusion
 
