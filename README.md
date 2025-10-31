@@ -154,10 +154,10 @@ Instructions:
 
     a. Go to terminal, and type "docker ps" to view running images.
 
-    b. Find the fuxa container in the output. Note its UID (called $FULL_ID in these instructions) at the start of the line, or rather, the first 4 characters of this UID (eg: d931; called $SHORT_ID in these instructions). 
+    b. Find the fuxa container in the output. Note its UID (called $FUXA_FULL_ID in these instructions) at the start of the line, or rather, the first 4 characters of this UID (eg: d931; called $HMI_SHORT_ID in these instructions). 
 
     c. Execute the following to enter a bash shell inside the container: 
-    > docker exec -it $SHORT_ID bash
+    > docker exec -it $HMI_SHORT_ID bash
 
     d. Execute the following:
     > whoami; hostname
@@ -173,13 +173,13 @@ Instructions:
     Your output should resemble the following.
 
        added 1 packages in 2s
-    f. Execute the following. Note that the first command exits the container bash shell, so that the second command is executed in the context of the host machine.
+    f. Execute the following. Note that the first command exits the container bash shell, so that the second command is executed in the context of the host machine. $PLC_SHORT_ID should be determined in the sqame manner as $HMI_SHORT_ID.
     > exit
 
-    > docker restart $SHORT_ID
+    > docker restart $PLC_SHORT_ID
 
     g. Execute the following.
-    > docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SHORT_ID
+    > docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $PLC_SHORT_ID
 
     Your output should resemble the following. This IP address is called $PLC_IP in these instructions.
 
@@ -207,14 +207,15 @@ Instructions:
       1. Return to the terminal you were using in Step 4.
 
       2. Execute the following.
-          > docker exec -it $SHORT_ID tcpdump -Ann port 502 -w basic_hmi.pcap
+          > 
+          > docker exec -it $PLC_SHORT_ID tcpdump -Ann port 502 -w basic_hmi.pcap
       
           Your output should resemble the following. Note that this command is currently active and will run until you send a keyboard interrupt with CTRL-C.
 
              tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
       3. Wait 5-10 seconds, then type CTRL-C to terminate the command.
       4. Execute the following.
-         > docker exec -it $SHORT_ID pwd
+         > docker exec -it $PLC_SHORT_ID pwd
         
          Your output should resemble the following. This value is called $WORKDIR in these instructions.
 
@@ -223,7 +224,7 @@ Instructions:
              What's next:
              ...
       5. Execute the following.
-         > docker cp $SHORT_ID:$WORKDIR/basic_hmi.pcap .
+         > docker cp $PLC_SHORT_ID:$WORKDIR/basic_hmi.pcap .
         
          Your output should resemble the following.
 
