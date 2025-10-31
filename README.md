@@ -44,13 +44,15 @@ In this section, we will install the OpenPLC Docker container, which we will pro
 
        git -c core.eol=lf -c core.autocrlf=false clone https://github.com/thiagoralves/OpenPLC_v3.git
 
-    once done, should say that it's running on TCP 8443. open a web browser and go to http://127.0.0.1:8080. you should see the following:
+    Once complete, it should say that it's running on TCP 8443. Open a web browser and go to http://127.0.0.1:8080. You should see the following:
 
-    <img src="static/good_webserver.png" alt="Fuxa Editor" width="800"/>
+    <img src="static/openplc_login.png" alt="OpenPLC Editor Login" width="800"/>
 
-    log in with default creds 'openplc:openplc'
+    Log in with default creds 'openplc:openplc'. You should now see the openplc main menu.
 
-    (TODO) overview of this portal
+    <img src="static/openplc_main_menu.png" alt="OpenPLC Editor Main Page" width="800"/>
+    
+
 
 ### OpenPLC Editor
 In this section, we will install the OpenPLC Editor, and use it to program the virtual PLC we created in the last section. 
@@ -227,10 +229,7 @@ Instructions:
         <img src="static/wireshark2.png" alt="PLC-HMI traffic in Wireshark" width="800"/>
 
 ### Writing Ladder Logic
-We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. 
-
-### Replay Attack
-The lab is complete! Let's use it to test out a classic ICS/OT pentesting technique, the replay attack!
+We're almost done! We now have an OpenPLC container talking to a Fuxa container over the industry-standard Modbus protocol. However, at this point, the HMI can only query the output of the PLC. Let's write a new program for the PLC that will turn the light on and off based on input from the HMI. We'll also use this opportunity to introduce registers, which are 16-bit variables we can use to store numeric values in our program.
 
 ### Conclusion
 
