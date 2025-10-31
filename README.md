@@ -34,7 +34,7 @@ In this section, we will install the OpenPLC Docker container, which we will pro
        git clone https://github.com/thiagoralves/OpenPLC_v3.git
        cd OpenPLC_v3
        docker build -t openplc:v3 .
-       docker run -it --rm --privileged -p 8080:8080 openplc:v3
+       docker run -it --rm --privileged -p 8080:8080 -p 502:502 openplc:v3
 
     If you receive the following error:
 
