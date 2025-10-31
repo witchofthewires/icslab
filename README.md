@@ -58,6 +58,8 @@ In this section, we will install the OpenPLC Docker container, which we will pro
 In this section, we will install the OpenPLC Editor, and use it to program the virtual PLC we created in the last section. 
 
 1. Download and install OpenPLC Editor by following the instructions on [this page](https://autonomylogic.com/download/).
+    
+    a. Mac users may need to enter Settings > Privacy and Security and select 'Open Anyway' next to OpenPLC. It will need to execute from the /Applications folder. (make sure it's in system /Applications, not user /Applications)
 2. Start OpenPLC Editor. You should see a screen similar to the following.
 ![OpenPLC Editor on startup](static/openplc_editor_new.png)
 3. Load the sample project 'Blink'.
@@ -84,6 +86,7 @@ In this section, we will install the OpenPLC Editor, and use it to program the v
       5. Edit the PT inputs, and run the simulation again. How does changing the duration of the timers affect the value of 'blink_led'/shape of the output waveform?
     
     e. Program OpenPLC
+      0. If there is not a variable next to blink_led, add %QX0.3
       1. Next to the running person icon from the previous step, click the down arrow, 'Generate Program for OpenPLC Runtime' (marked 2 in the 3b diagram).
       2. Navigate to your project folder and save the compiled output as 'blink.st' or similar.
       3. In OpenPLC, click Programs in the left pane.
